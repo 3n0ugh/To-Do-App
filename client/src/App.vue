@@ -29,7 +29,7 @@
           class="form-control"
           id="note"
           rows="3"
-          placeholder="Enter your note here." required
+          placeholder="Enter your note here."
         ></textarea>
       </div>
       <div class="mt-2">
@@ -80,7 +80,16 @@ export default {
     },
     notes: [],
   }),
-  
+  mounted() {
+    fetch(`${API_URL}/api/v1/to-do`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (result) {
+          console.log(result)
+          this.getNotes();
+        } 
+      });
+  },
   methods: {
     renderMarkdown(note) {
       return md.render(note);
@@ -102,7 +111,6 @@ export default {
       }).then((res) => res.json())
         .then((note) => {
           this.notes.push(note);
-          console.log(note);
           this.newTodo = {
             title: '',
             note: '',
@@ -113,7 +121,9 @@ export default {
     removeNote(id) {
       fetch(`${API_URL}/api/v1/to-do`, {
         method: 'DELETE',
-        body: JSON.stringify(id),
+        body: JSON.stringify({
+          _id: id
+        }),
         headers: {
           'content-type': 'application/json',
         },

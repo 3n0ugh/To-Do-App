@@ -1,5 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
+const monk = require('monk');
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const schema = Joi.object({
 });
 
 router.get('/', (req, res) => {
-  notes((notes) => {
+  notes.find().then((notes) => {
     console.log(notes);
     res.json(notes);
   });
@@ -34,15 +35,19 @@ router.post('/', (req, res, next) => {
   }
 });
 
-router.delete('/', (req, res) => {
+router.delete('/', (req, res, next) => {
+  const id = monk.id(req.body._id);
   const note = {
-    _id: req.body._id,
+    _id: id,
   };
-  notes.remove(note).then((note) => {
-    console.log(req.body);
-    res.json(note);
-  });
-  res.status(410);
+  notes
+    .remove(note)
+    .then((note) => {
+      res.json(note);
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 module.exports = router;
