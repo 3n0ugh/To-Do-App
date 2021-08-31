@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="content">
     <h1> TO-DO APP </h1>
     <div class="mt-2 col-2">
       <button  @click="showForm = !showForm" class="btn btn-info">
@@ -19,22 +19,22 @@
           placeholder="Enter a title." required
         />
         <div id="titleHelp" class="form-text text-muted">
-          Enter a descriptive title for your note.
+          Enter a descriptive title for your todo.
         </div>
       </div>
       <div class="form-group col-8">
-        <label for="note" class="form-label">Note</label>
+        <label for="note" class="form-label">ToDo</label>
         <textarea
           v-model="newTodo.note"
           class="form-control"
           id="note"
           rows="3"
-          placeholder="Enter your note here."
+          placeholder="Enter your todo here."
         ></textarea>
       </div>
       <div class="mt-2">
         <button type="submit" class="btn btn-success">
-          Add Note
+          Add ToDo
         </button>
       </div>
     </form>
@@ -53,7 +53,7 @@
           <div class="card-body">
             <p class="card-text" v-html="renderMarkdown(note.note)"/>
           </div>
-          <button @click="removeNote(note._id)" class="btn btn-danger">
+          <button @click="removeTodo(note._id)" class="btn btn-danger">
           Remove
           </button>
         </div>
@@ -118,7 +118,7 @@ export default {
           this.showForm = false;
         });
     },
-    removeNote(id) {
+    removeTodo(id) {
       fetch(`${API_URL}/api/v1/to-do`, {
         method: 'DELETE',
         body: JSON.stringify({
@@ -142,11 +142,16 @@ export default {
 <style>
 .card {
   height: 30%;
+  width: 70%;
 }
 .card-text img{
   width: 30%;
 }
 .form-control{
   color: #fff;
+}
+.content {
+  max-width: 1500px;
+  margin: auto;
 }
 </style>
